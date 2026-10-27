@@ -138,8 +138,8 @@ class MainActivity : Activity() {
             newPage()
             write("ЗАЯВЛЕНИЕ НА ОТПРАВКУ ГРУЗА",true)
             write("Дата: "+SimpleDateFormat("dd.MM.yyyy",Locale.getDefault()).format(Date()))
-            val number=fields["number"]!!.text.toString()
-            if(number.isNotBlank()) write("Номер: $number")
+            val blankNumber=fields["number"]!!.text.toString()
+            if(blankNumber.isNotBlank()) write("Номер: $blankNumber")
             for ((key,label) in listOf("city" to "Город", "destination" to "Назначение", "recipient" to "Получатель", "sender" to "Отправитель")) {
                 write("$label: ${fields[key]!!.text}")
             }
