@@ -5,7 +5,9 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.content.ContentValues
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Paint
+import android.graphics.RectF
 import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
 import android.net.Uri
@@ -34,6 +36,14 @@ class MainActivity : Activity() {
         root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(24,24,24,32) }
         scroll.addView(root)
         setContentView(scroll)
+        root.addView(ImageView(this).apply {
+            setImageResource(R.drawable.fastrance_logo)
+            adjustViewBounds = true
+            maxHeight = 110
+            scaleType = ImageView.ScaleType.FIT_START
+            contentDescription = "Фастранс"
+            setPadding(0, 0, 0, 12)
+        }, LinearLayout.LayoutParams(-1, ViewGroup.LayoutParams.WRAP_CONTENT))
         titleText("ЗАЯВЛЕНИЕ НА ОТПРАВКУ ГРУЗА")
         field("Номер бланка (необязательно)", "number")
         field("Город отправления", "city")
@@ -116,11 +126,15 @@ class MainActivity : Activity() {
             var y=40f
             val regular=Paint(3).apply { color=android.graphics.Color.BLACK; textSize=12f; typeface=Typeface.create("sans-serif",Typeface.NORMAL) }
             val heavy=Paint(regular).apply { typeface=Typeface.create("sans-serif",Typeface.BOLD) }
+            val logo = BitmapFactory.decodeResource(resources, R.drawable.fastrance_logo)
             fun newPage() {
                 if (page != null) doc.finishPage(page!!)
                 pageNo++
                 page=doc.startPage(PdfDocument.PageInfo.Builder(595,842,pageNo).create())
-                y=40f
+                val logoWidth = 170f
+                val logoHeight = logo.height * logoWidth / logo.width
+                page!!.canvas.drawBitmap(logo, null, RectF(40f, 40f, 40f + logoWidth, 40f + logoHeight), null)
+                y=40f + logoHeight + 24f
             }
             fun write(s:String,bold:Boolean=false) {
                 if (page==null || y>790f) newPage()
