@@ -21,6 +21,12 @@ jobs:
         with:
           gradle-version: '8.9'
       - run: gradle assembleDebug --stacktrace
+      - name: Verify generated APK
+        run: |
+          APK=app/build/outputs/apk/debug/app-debug.apk
+          unzip -t "$APK"
+          AAPT="$(find "$ANDROID_HOME/build-tools" -type f -name aapt | sort | tail -n 1)"
+          "$AAPT" dump badging "$APK"
       - uses: actions/upload-artifact@v4
         with:
           name: GruzBlank-debug-apk
